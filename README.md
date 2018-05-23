@@ -1,6 +1,14 @@
-# Ethereum SDK
+# Ethereumjs SDK
 
-The Etherem SDK is an Local signature transfer, Local signature contract release and contract interaction tool, as well as the web3 client.
+The Etherem Javascript SDK is an Local signature transfer, Local signature contract release and contract interaction tool, as well as the web3 client.
+
+## Getting Started
+
+```
+npm i ethereumjs-sdk
+
+var client = require("ethereumjs-sdk")
+```
 
 ## Config.
 

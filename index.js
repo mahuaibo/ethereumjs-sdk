@@ -98,7 +98,10 @@ module.exports = {
             });
             return result;
         } catch (err) {
-            console.log(err);
+            if (this.config.dev) {
+                console.log(err);
+            }
+            throw err;
         }
     },
     transfer: async function (request) {
@@ -167,7 +170,10 @@ module.exports = {
             });
             return result;
         } catch (err) {
-            console.log(err);
+            if (this.config.dev) {
+                console.log(err);
+            }
+            throw err;
         }
     },
     invoke: async function (request) {
@@ -328,7 +334,10 @@ module.exports = {
                 return result;
             }
         } catch (err) {
-            console.log(err);
+            if (this.config.dev) {
+                console.log(err);
+            }
+            throw err;
         }
     }
 }
