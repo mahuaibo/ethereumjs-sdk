@@ -67,22 +67,21 @@ module.exports = {
                 _account = await this.web3.eth.accounts.privateKeyToAccount('0x' + request.sender);
                 _privateKey = new Buffer(request.sender, 'hex')
             }
+            if (request.nonce === undefined || request.nonce === ''){
+                request.nonce = await this.web3.eth.getTransactionCount(_account.address);
+            }
+            if (request.gasPrice === undefined || request.gasPrice === ''){
+                request.gasPrice = await this.web3.eth.getGasPrice();
+            }
             if (this.config.dev) {
                 console.log("_account: ", _account);
             }
-            if (this.config.dev) {
-                console.log("_privateKey: ", _privateKey.toString('hex'));
-            }
-            var gasPrice = await this.web3.eth.getGasPrice();
-            var nonce = await this.web3.eth.getTransactionCount(_account.address);
-            var chainId = await this.web3.eth.net.getId();
             var rawTx = {
-                nonce: this.web3.utils.toHex(nonce),
-                gasPrice: this.web3.utils.toHex(gasPrice),
+                nonce: this.web3.utils.toHex(request.nonce),
+                gasPrice: this.web3.utils.toHex(request.gasPrice),
                 data: data,
                 value: request.value,
-                gasLimit: this.web3.utils.toHex(request.gasLimit),
-                chainId: chainId
+                gasLimit: this.web3.utils.toHex(request.gasLimit)
             }
             if (this.config.dev) {
                 console.log("rawTx: ",rawTx);
@@ -93,8 +92,12 @@ module.exports = {
             if (this.config.dev) {
                 console.log("serializedTx: ",serializedTx);
             }
+            var txHash = await this.web3.utils.sha3('0x'+serializedTx);
+            result.txHash = txHash;
             await this.web3.eth.sendSignedTransaction('0x' + serializedTx).on('transactionHash', function (hash) {
                 result.hash = hash;
+            }).on('error', function(error){
+                throw error;
             });
             return result;
         } catch (err) {
@@ -135,22 +138,21 @@ module.exports = {
                 _account = await this.web3.eth.accounts.privateKeyToAccount('0x' + request.sender);
                 _privateKey = new Buffer(request.sender, 'hex')
             }
+            if (request.nonce === undefined || request.nonce === ''){
+                request.nonce = await this.web3.eth.getTransactionCount(_account.address);
+            }
+            if (request.gasPrice === undefined || request.gasPrice === ''){
+                request.gasPrice = await this.web3.eth.getGasPrice();
+            }
             if (this.config.dev) {
                 console.log("_account: ", _account);
             }
-            if (this.config.dev) {
-                console.log("_privateKey: ", _privateKey.toString('hex'));
-            }
-            var gasPrice = await this.web3.eth.getGasPrice();
-            var nonce = await this.web3.eth.getTransactionCount(_account.address);
-            var chainId = await this.web3.eth.net.getId();
             var rawTx = {
-                nonce: this.web3.utils.toHex(nonce),
-                gasPrice: this.web3.utils.toHex(gasPrice),
+                nonce: this.web3.utils.toHex(request.nonce),
+                gasPrice: this.web3.utils.toHex(request.gasPrice),
                 to: request.to,
                 value: request.value,
-                gasLimit: this.web3.utils.toHex(request.gasLimit),
-                chainId: chainId
+                gasLimit: this.web3.utils.toHex(request.gasLimit)
             }
             if (this.config.dev) {
                 console.log("rawTx: ",rawTx);
@@ -165,8 +167,13 @@ module.exports = {
             if (request.id !== undefined && request.id !== '') {
                 result.id = request.id;
             }
+            var txHash = await this.web3.utils.sha3('0x'+serializedTx);
+            result.txHash = txHash;
+
             await this.web3.eth.sendSignedTransaction('0x' + serializedTx).on('transactionHash', function (hash) {
                 result.hash = hash;
+            }).on('error', function(error){
+                throw error;
             });
             return result;
         } catch (err) {
@@ -307,17 +314,20 @@ module.exports = {
                 if (this.config.dev) {
                     console.log("_privateKey: ", _privateKey.toString('hex'));
                 }
-                var gasPrice = await this.web3.eth.getGasPrice();
-                var nonce = await this.web3.eth.getTransactionCount(_account.address);
-                var chainId = await this.web3.eth.net.getId();
+                if (request.nonce === undefined || request.nonce === ''){
+                    request.nonce = await this.web3.eth.getTransactionCount(_account.address);
+                }
+                if (request.gasPrice === undefined || request.gasPrice === ''){
+                    request.gasPrice = await this.web3.eth.getGasPrice();
+                }
+
                 var rawTx = {
-                    nonce: this.web3.utils.toHex(nonce),
-                    gasPrice: this.web3.utils.toHex(gasPrice),
+                    nonce: this.web3.utils.toHex(request.nonce),
+                    gasPrice: this.web3.utils.toHex(request.gasPrice),
                     to: _contract.address,
                     data: data,
                     value: request.value,
-                    gasLimit: this.web3.utils.toHex(request.gasLimit),
-                    chainId: chainId
+                    gasLimit: this.web3.utils.toHex(request.gasLimit)
                 }
                 if (this.config.dev) {
                     console.log("rawTx: ",rawTx);
@@ -325,11 +335,17 @@ module.exports = {
                 var tx = new Tx(rawTx);
                 tx.sign(_privateKey);
                 var serializedTx = tx.serialize().toString('hex');
+
+                var txHash = await this.web3.utils.sha3('0x'+serializedTx);
+                result.txHash = txHash;
+
                 if (this.config.dev) {
                     console.log("serializedTx: ",serializedTx);
                 }
                 await this.web3.eth.sendSignedTransaction('0x' + serializedTx).on('transactionHash', function (hash) {
                     result.hash = hash;
+                }).on('error', function(error){
+                    throw error;
                 });
                 return result;
             }

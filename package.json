@@ -1,10 +1,11 @@
 {
   "name": "ethereumjs-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "ethereum js sdk",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "nohup node index.js &",
+    "test": "node index.js"
   },
   "repository": {
     "type": "git",

@@ -82,6 +82,8 @@ Local signature transfer
 /**
  * @param to : to account.
  * @param value : value[wei].
+ * @param nonce : nonce（optional）.
+ * @param gasPrice : gasPrice（optional）.
  * @param gasLimit : gasLimit.
  * @param id : id.
  * @param sender : contract method caller[string],The sender is public key when the method type is called;The sender is private key when the method type is send.
@@ -108,6 +110,8 @@ Local signature deploy contract
  * @param contract : contract name[string].
  * @param params : method params [array].
  * @param value : value.
+ * @param nonce : nonce（optional）.
+ * @param gasPrice : gasPrice（optional）.
  * @param gasLimit : gasLimit.
  * @param id : id.
  * @param sender : contract method caller[string],The sender is private key.
@@ -136,6 +140,8 @@ Local signature invoke contract
  * @param method : contract method name[string].
  * @param params : method params [array].
  * @param value : value.
+ * @param nonce : nonce（optional）.
+ * @param gasPrice : gasPrice（optional）.
  * @param gasLimit : gasLimit.
  * @param id : id.
  * @param sender : contract method caller[string],The sender is public key when the method type is called;The sender is private key when the method type is send.
